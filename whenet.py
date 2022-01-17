@@ -25,6 +25,7 @@ class WHENet:
         img = img/255
         img = (img - mean) / std
         predictions = self.model.predict(img, batch_size=8)
+        # print("h5 predict: \n", predictions)
         yaw_predicted = softmax(predictions[0])
         pitch_predicted = softmax(predictions[1])
         roll_predicted = softmax(predictions[2])

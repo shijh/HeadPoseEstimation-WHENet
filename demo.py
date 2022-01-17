@@ -1,7 +1,8 @@
 import numpy as np
 import cv2
-from whenet import WHENet
+from whenet_tf import WHENetTF
 from utils import draw_axis
+
 
 def crop_and_pred(img_path, bbox, model):
     img = cv2.imread(img_path)
@@ -16,8 +17,9 @@ def crop_and_pred(img_path, bbox, model):
     cv2.imshow('output',img)
     cv2.waitKey(5000)
 
+
 if __name__ == "__main__":
-    model = WHENet('WHENet.h5')
+    model = WHENetTF('WHENet.h5')
     root = 'Sample/'
     print(model.model.summary())
 
