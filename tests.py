@@ -26,7 +26,7 @@ def h5_crop_and_pred(img_path, bbox, model):
     cv2.waitKey(5000)
 
 
-def onnx_crop_and_pred(img_path, bbox, sess, idx_tensor_yaw, idx_tensor):
+def onnx_crop_and_pred(img_path, bbox, sess, file_name, idx_tensor_yaw, idx_tensor):
     img = cv2.imread(img_path)
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     x_min, y_min, x_max, y_max = bbox
@@ -54,7 +54,7 @@ def onnx_crop_and_pred(img_path, bbox, sess, idx_tensor_yaw, idx_tensor):
     yaw_predicted = np.sum(yaw_predicted * idx_tensor_yaw, axis=1) * 3 - 180
     pitch_predicted = np.sum(pitch_predicted * idx_tensor, axis=1) * 3 - 99
     roll_predicted = np.sum(roll_predicted * idx_tensor, axis=1) * 3 - 99
-    print("onnx predict results for ", img_path, ":")
+    print(file_name, ": onnx predict results for ", img_path, ":")
     print("  yaw:   ", yaw_predicted)
     print("  pitch: ", pitch_predicted)
     print("  roll:  ", roll_predicted)
@@ -69,7 +69,10 @@ if __name__ == "__main__":
     root = 'Sample/'
     print(model.model.summary())
 
-    sess = rt.InferenceSession('WHENet.onnx')
+    file_name = 'WHENet.onnx'
+    file_name_tf = 'WHENet_tf.onnx'
+    sess = rt.InferenceSession(file_name)
+    sess_tf = rt.InferenceSession(file_name_tf)
 
     with open('Sample/bbox.txt', 'r') as f:
         lines = f.readlines()
@@ -79,6 +82,8 @@ if __name__ == "__main__":
         bbox = bbox.split(' ')
         bbox = [int(b) for b in bbox]
         h5_crop_and_pred(root+filename, bbox, model)
-        print()
-        onnx_crop_and_pred(root+filename, bbox, sess, model.idx_tensor_yaw, model.idx_tensor)
-        print("\n-------------------")
+        print("__________________________________________________________________________________________________")
+        onnx_crop_and_pred(root+filename, bbox, sess, file_name, model.idx_tensor_yaw, model.idx_tensor)
+        print("__________________________________________________________________________________________________")
+        onnx_crop_and_pred(root+filename, bbox, sess, file_name_tf, model.idx_tensor_yaw, model.idx_tensor)
+        print("==================================================================================================\n")

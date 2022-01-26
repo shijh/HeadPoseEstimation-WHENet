@@ -25,7 +25,7 @@ def whenettf_to_onnx(img_path, head_box, tf_model):
     crop_and_predict(img_path, head_box, tf_model)
 
     # and then convert
-    onnx_model = keras2onnx.convert_keras(tf_model.model, tf_model.model.name, debug_mode=True, target_opset=12)
+    onnx_model = keras2onnx.convert_keras(tf_model.model, tf_model.model.name, debug_mode=True, target_opset=8)
     onnx.save_model(onnx_model, 'WHENet.onnx')
 
 
