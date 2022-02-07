@@ -12,3 +12,5 @@ onnx==1.6.0
 keras2onnx
 tf2onnx
 onnxruntime
+
+pytest

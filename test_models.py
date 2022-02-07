@@ -47,11 +47,11 @@ def onnx_crop_and_pred(img_path, bbox, sess, file_name, idx_tensor_yaw, idx_tens
     yaw_predicted = softmax(res[0])
     pitch_predicted = softmax(res[1])
     roll_predicted = softmax(res[2])
-    print('onnxruntime yaw softmax:\n', yaw_predicted)
-    print('onnxruntime pitch softmax:\n', pitch_predicted)
-    print('onnxruntime roll softmax:\n', roll_predicted)
-    print('idx_tensor_yaw: ', idx_tensor_yaw)
-    print('idx_tensor: ', idx_tensor)
+    # print('onnxruntime yaw softmax:\n', yaw_predicted)
+    # print('onnxruntime pitch softmax:\n', pitch_predicted)
+    # print('onnxruntime roll softmax:\n', roll_predicted)
+    # print('idx_tensor_yaw: ', idx_tensor_yaw)
+    # print('idx_tensor: ', idx_tensor)
     yaw_predicted = np.sum(yaw_predicted * idx_tensor_yaw, axis=1) * 3 - 180
     pitch_predicted = np.sum(pitch_predicted * idx_tensor, axis=1) * 3 - 99
     roll_predicted = np.sum(roll_predicted * idx_tensor, axis=1) * 3 - 99
@@ -66,7 +66,7 @@ def onnx_crop_and_pred(img_path, bbox, sess, file_name, idx_tensor_yaw, idx_tens
     return yaw_predicted, pitch_predicted, roll_predicted
 
 
-def test_model_results():
+def test_models():
     model = WHENetTF('WHENet.h5')
     root = 'Sample/'
     print(model.model.summary())
@@ -89,6 +89,9 @@ def test_model_results():
         yaw_ratio = yaw/yaw_k2o
         pitch_ratio = pitch/pitch_k2o
         roll_ratio = roll/roll_k2o
+        print('  yaw ratio: ', yaw, '/', yaw_k2o, '=', yaw_ratio)
+        print('  pitch ratio: ', pitch, '/', pitch_k2o, '=', pitch_ratio)
+        print('  roll ratio: ', roll, '/', roll_k2o, '=', roll_ratio)
         assert 1.001 >= yaw_ratio >= 0.999
         assert 1.001 >= pitch_ratio >= 0.999
         assert 1.001 >= roll_ratio >= 0.999
@@ -97,6 +100,9 @@ def test_model_results():
         yaw_ratio = yaw/yaw_tf2o
         pitch_ratio = pitch/pitch_tf2o
         roll_ratio = roll/roll_tf2o
+        print('  yaw ratio: ', yaw, '/', yaw_tf2o, '=', yaw_ratio)
+        print('  pitch ratio: ', pitch, '/', pitch_tf2o, '=', pitch_ratio)
+        print('  roll ratio: ', roll, '/', roll_tf2o, '=', roll_ratio)
         assert 1.001 >= yaw_ratio >= 0.999
         assert 1.001 >= pitch_ratio >= 0.999
         assert 1.001 >= roll_ratio >= 0.999
